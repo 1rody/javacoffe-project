@@ -1,3 +1,5 @@
+package cafeteria;
+
 import java.util.Scanner;
 
 public class Main {
