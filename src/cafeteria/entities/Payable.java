@@ -1,4 +1,4 @@
 package cafeteria.entities;
 
-public class Coffe {
+public interface Payable {
 }
