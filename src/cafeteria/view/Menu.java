@@ -40,6 +40,13 @@ public class Menu {
 
         } while (option != 0);
     }
+    private void employeeMenu() {
 
+    }
+    private  void clientMenu() {
 
+    }
+    private  void orderMenu() {
+
+    }
 }
