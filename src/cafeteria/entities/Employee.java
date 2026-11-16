@@ -1,6 +1,6 @@
 package cafeteria.entities;
 
-public class Employee extends Person{
+public class Employee extends Person implements Payable{
     private Integer id;
     private String occupation;
     private Double salary;
@@ -42,6 +42,12 @@ public class Employee extends Person{
 
     public void setSalary(Double salary) {
         this.salary = salary;
+    }
+
+    //calculo de salário com o interface
+    @Override 
+    public double calculatePayment(){
+        return this.salary;
     }
 
 }
