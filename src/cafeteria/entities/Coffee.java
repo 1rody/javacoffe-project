@@ -4,18 +4,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Coffee {
-    //encapsulamento
     private String coffeename; //perguntar o nome para o cliente no "Programa.java"
     private List<String> coffeeList = new ArrayList<>();
-    private Double price;
+    private Double price =0.0; //defini como 0.0 para garantir que caso nao tenha prco nao de null
     private String description;
     private Boolean lactose = false;
 
-    public Coffee(){} //construtor vazio para 
+    public Coffee() {}
 
     public Coffee(String coffeename, Double price, String description, Boolean lactose){
-
-        //super(name); exportar do Cliente o nome;
         this.tipos();
         this.coffeename = coffeename;
         this.price = price;
@@ -131,27 +128,23 @@ public class Coffee {
                 break;
 
             default:
-
-                while (!coffeename.equalsIgnoreCase("Expresso")||!coffeename.equalsIgnoreCase("Macchiato")||!coffeename.equalsIgnoreCase("Mocaccino")||!coffeename.equalsIgnoreCase("Cappuccino")||!coffeename.equalsIgnoreCase("Latte")) {
-                    System.out.println("Erro: <Nenhum tipo válido>");
-                    //Adicionar o scanner que vai na interface do "Programa.java"
-                }
+                System.out.println("Erro: <Nenhum tipo válido>");
         }
     }
 
     public String statusLactose(){
         //status de intolerância (tem ou não)
         if(lactose==true){
-            return "|Cliente '+super(name)+', declarou que possui Intolerância à lactose.";
+            return "|Cliente declarou que possui Intolerância à lactose.";
         }else{
-            return "|Cliente '+super(name)+', não afirmou Intolerância à lactose.";
+            return "|Cliente não afirmou Intolerância à lactose.";
         }
     }
 
     @Override
     public String toString() {
         //toString descrevendo informações sobre o produto (nome; preço; descrição do produto; intolerância à lactose.)
-        return "Prezado Cliente '+super(name)+', obtenha informações do produto abaixo.\n|Produto: "+
+        return "Prezado Cliente obtenha informações do produto abaixo.\n|Produto: "+
                 coffeename+"\n|Valor do produto: "+
                 price+"\n|Descrição do produto: "+
                 description+"\n|Situação de Intolerância à lactose:"+

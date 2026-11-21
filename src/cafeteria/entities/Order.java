@@ -6,27 +6,27 @@ import java.util.List;
 public class Order {
     private Integer id;
     private Client client;
-    private List<Coffee> Coffees =  new ArrayList<>();
+    private List<Coffee> coffees =  new ArrayList<>();
 
 
-    public Order() {};
+    public Order() {}
 
     public Order(Integer id, Client client) {
         this.id = id;
         this.client = client;
     }
 
-    public void addCoffe(Coffee coffee) {
-        Coffees.add(coffee);
+    public void addCoffee(Coffee coffee) {
+        coffees.add(coffee);
 
     }
-    public void removeCoffe(Coffee coffee) {
-        Coffees.remove(coffee);
+    public void removeCoffee(Coffee coffee) {
+        coffees.remove(coffee);
     }
 
-    public Double Total() {
+    public Double total() {
         double totals = 0.0;
-        for(Coffee c : Coffees) {
+        for(Coffee c : coffees) {
             totals += c.getPrice();
         }
         return totals;
@@ -41,6 +41,15 @@ public class Order {
     }
 
     public List<Coffee> getCoffees() {
-        return Coffees;
+        return coffees;
+    }
+
+    @Override
+    public String toString() {
+        return "Order{" +
+                "id=" + id +
+                ", client=" + client.getName() +
+                ", Coffees=" + coffees +
+                '}';
     }
 }
