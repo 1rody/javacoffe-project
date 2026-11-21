@@ -1,5 +1,7 @@
 package cafeteria.view;
 
+import cafeteria.entities.Employee;
+import cafeteria.entities.ExternalEmployee;
 import cafeteria.services.ClientService;
 import cafeteria.services.EmployeeService;
 import cafeteria.services.OrderService;
@@ -45,57 +47,107 @@ public class Menu {
         System.out.println("Insira a senha local para login");
         password = sc.nextInt();
 
-        if(password == 12345) {
-            System.out.println("=====THE BEST COFFE STAFF =====");
-            System.out.println("Digite a opcao para realizar a acao");
+        while(password != 12345) {
+            System.out.println("Senha invalida favor tente novamente!");
+            password = sc.nextInt();
+        };
 
-            System.out.println("1- Cadastro de funcionario");
-            System.out.println("2- Remocao de funcionario");
-            System.out.println("3- Atendimento");
-            System.out.println("0- Sair");
+        System.out.println("=====THE BEST COFFE STAFF =====");
+        System.out.println("Digite a opcao para realizar a acao");
 
-            int secondSelection;
-            int thridSelection;
-            secondSelection = sc.nextInt();
+        System.out.println("1- Cadastro de funcionario");
+        System.out.println("2- Remocao de funcionario");
+        System.out.println("0- Sair");
 
-            switch (secondSelection) {
-                case 1:
+        int secondSelection;
+        int thridSelection;
+        secondSelection = sc.nextInt();
 
-                    System.out.println("Cadastro de funcionario:");
+        switch (secondSelection) {
+            case 1:
 
-                    System.out.println("1- Cadastro de funcionario");
-                    System.out.println("2- Cadastro de funcionario Terceirizado");
+                System.out.println("Cadastro de funcionario:");
 
-                    thridSelection = sc.nextInt();
+                System.out.println("1- Cadastro de funcionario");
+                System.out.println("2- Cadastro de funcionario Terceirizado");
+
+                thridSelection = sc.nextInt();
 
 
-                    if (thridSelection > 2) {
-                        System.out.println("Opcao invalida favor tente novamente!");
-                    }
-                    else {
-                        switch (thridSelection) {
-                            case 1:
-                                System.out.println("Cadastro de funcionario CLT");
-                                break;
-                            case 2:
-                                System.out.println(" Cadastro de funcionario Terceirizado");
-                        }
-                    }
-                    break;
-                case 2:
+                switch (thridSelection) {
+                    case 1:
+                        System.out.println(" Cadastro de funcionario CLT");
 
-            }
+                        sc.nextLine();
+                        System.out.print("Nome: ");
+                        String name = sc.nextLine();
+                        System.out.print("Email: ");
+                        String email = sc.nextLine();
+                        System.out.print("CPF: ");
+                        String cpf = sc.nextLine();
+                        System.out.print("ID: ");
+                        int id = sc.nextInt();
+                        sc.nextLine();
+                        System.out.print("Cargo: ");
+                        String occupation = sc.nextLine();
+                        System.out.print("Salario: ");
+                        double salary = sc.nextDouble();
 
-            if (secondSelection >= 3) {
-                System.out.println("Opcao invalida favor tente novamente!");
-            }
+                        Employee employee = new Employee(name, email, cpf, id, occupation, salary);
+                        employeeService.addEmployee(employee);
+                        System.out.println("Funcionario cadastrado!");
+                        break;
+                    case 2:
+                        System.out.println(" Cadastro de funcionario Terceirizado");
+                        sc.nextLine();
+                        System.out.print("Nome: ");
+                        String tname = sc.nextLine();
+                        System.out.print("Email: ");
+                        String temail = sc.nextLine();
+                        System.out.print("CPF: ");
+                        String tcpf = sc.nextLine();
+                        System.out.print("ID: ");
+                        int tid = sc.nextInt();
+                        sc.nextLine();
+                        System.out.print("Cargo: ");
+                        String toccupation = sc.nextLine();
+                        System.out.print("Salario: ");
+                        double tsalary = sc.nextDouble();
+                        sc.nextLine();
+                        System.out.print("Empresa: ");
+                        String company = sc.nextLine();
+                        System.out.print("Valor da hora: ");
+                        double hourValue = sc.nextDouble();
+                        System.out.print("Horas trabalhadas: ");
+                        double hourWorked = sc.nextDouble();
+
+                        ExternalEmployee tEmployee = new ExternalEmployee(tname, temail, tcpf, tid, toccupation, tsalary, company, hourValue, hourWorked);
+                        employeeService.addEmployee(tEmployee);
+                        System.out.println("Funcionario terceirizado cadastrado!");
+                        break;
+
+                }
+            break;
+            case 2:
+                System.out.print("REMOCAO DE FUNCIONARIO ");
+                sc.nextLine();
+                System.out.print("CPF do funcionario: ");
+                String cpf = sc.nextLine();
+
+                if (employeeService.removeEmployee(cpf)) {
+                    System.out.println("Funcionario removido!");
+                } else {
+                    System.out.println("Funcionario nao encontrado!");
+                }
+                break;
+
+
         }
-        else {
-            do {
-                System.out.println("Senha invalida favor tente novamente!");
-                password = sc.nextInt();
-            } while(password != 12345);
+
+        if (secondSelection >= 3) {
+            System.out.println("Opcao invalida favor tente novamente!");
         }
+
 
     }
     private  void clientMenu() {
