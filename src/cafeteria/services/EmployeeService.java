@@ -9,4 +9,7 @@ public class EmployeeService {
     public void addEmployee(Employee employee) {
         employees.add(employee);
     }
+    public boolean removeEmployee(String cpf) {
+        return employees.removeIf(e -> e.getCpf().equals(cpf));
+    }
 }
