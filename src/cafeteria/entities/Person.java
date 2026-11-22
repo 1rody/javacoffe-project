@@ -47,6 +47,4 @@ public abstract class Person {
     public void setCpf(String cpf) {
         this.cpf = cpf;
     }
-
-    
 }
