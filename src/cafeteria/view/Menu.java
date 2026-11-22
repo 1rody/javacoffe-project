@@ -2,6 +2,7 @@ package cafeteria.view;
 
 import cafeteria.entities.Employee;
 import cafeteria.entities.ExternalEmployee;
+import cafeteria.entities.Client;
 import cafeteria.services.ClientService;
 import cafeteria.services.EmployeeService;
 import cafeteria.services.OrderService;
@@ -22,7 +23,7 @@ public class Menu {
 
         do {
             //codigo para ir ao menu
-            System.out.println("=====THE BEST COFFE =====");
+            System.out.println("=====THE BEST COFFE=====");
             System.out.println("Digite a opcao para entrar no sistema");
             System.out.println("1- Gestao da equipe");
             System.out.println("2- Cadastro de cliente");
@@ -43,7 +44,7 @@ public class Menu {
     }
     private void employeeMenu() {
         int password;
-        System.out.println("=====THE BEST COFFE STAFF =====");
+        System.out.println("=====THE BEST COFFE STAFF=====");
         System.out.println("Insira a senha local para login");
         password = sc.nextInt();
 
@@ -60,7 +61,7 @@ public class Menu {
         System.out.println("0- Sair");
 
         int secondSelection;
-        int thridSelection;
+        int thirdSelection;
         secondSelection = sc.nextInt();
 
         switch (secondSelection) {
@@ -71,17 +72,16 @@ public class Menu {
                 System.out.println("1- Cadastro de funcionario");
                 System.out.println("2- Cadastro de funcionario Terceirizado");
 
-                thridSelection = sc.nextInt();
+                thirdSelection = sc.nextInt();
 
-
-                switch (thridSelection) {
+                switch (thirdSelection) {
                     case 1:
                         System.out.println(" Cadastro de funcionario CLT");
 
                         sc.nextLine();
                         System.out.print("Nome: ");
                         String name = sc.nextLine();
-                        System.out.print("Email: ");
+                        System.out.print("E-Mail: ");
                         String email = sc.nextLine();
                         System.out.print("CPF: ");
                         String cpf = sc.nextLine();
@@ -102,7 +102,7 @@ public class Menu {
                         sc.nextLine();
                         System.out.print("Nome: ");
                         String tname = sc.nextLine();
-                        System.out.print("Email: ");
+                        System.out.print("E-Mail: ");
                         String temail = sc.nextLine();
                         System.out.print("CPF: ");
                         String tcpf = sc.nextLine();
@@ -148,14 +148,71 @@ public class Menu {
             System.out.println("Opcao invalida favor tente novamente!");
         }
 
-
     }
     private  void clientMenu() {
+        int secondSelection;
+//        int password;
+//
+//        System.out.println("=====THE BEST COFFE STAFF=====");
+//        System.out.println("Insira a senha local para login");
+//        password = sc.nextInt();
+//
+//        while(password != 12345) {
+//            System.out.println("Senha invalida favor tente novamente!");
+//            password = sc.nextInt();
+//        };
+//
+// n sei se precisa de senha pra cadastrar cliente mas ja ta aq Caso
 
+        System.out.println("Digite a opcao para realizar a acao");
+
+        System.out.println("1- Cadastro de cliente");
+        System.out.println("2- Remocao de cliente");
+        System.out.println("0- Sair");
+
+        secondSelection=sc.nextInt();
+        sc.nextLine();
+
+        switch (secondSelection){
+            case 0:
+                System.out.println("Saindo...");
+                break;
+            case 1:
+                System.out.println("=====CADASTRO DE CLIENTE======");
+                System.out.print("Nome: ");
+                String name=sc.nextLine();
+
+                System.out.print("\nE-Mail: ");
+                String email=sc.nextLine();
+
+                System.out.print("\nCPF: ");
+                String cpf=sc.nextLine();
+
+                Client client = new Client(name, email, cpf);
+                break;
+            case 2:
+                System.out.println("=====REMOCAO DE CLIENTE=====");
+
+                System.out.print("Digite o nome/CPF do cliente: ");
+                String nameOrCpf;
+                do {
+                    nameOrCpf=sc.nextLine();
+                    if(clientService.removeClient(nameOrCpf)){
+                        System.out.println("Cliente removido!");
+                    } else {
+                        System.out.print("\nCliente nao encontrado\nTente novamente:");
+                    }
+                } while(!clientService.removeClient(nameOrCpf));
+                break;
+            default:
+                System.out.println("Opcao invalida!");
+                System.out.println("Digite 1, 2 ou 0 para sair");
+        }
     }
+
     private  void orderMenu() {
         int secondSelection;
-        System.out.println("======= MENU DE ATENDIMENTO =========");
+        System.out.println("=====MENU DE ATENDIMENTO=====");
 
         System.out.println("Digite um valor abaixo para realizar a tarefa:");
         System.out.println("1. Novo pedido");
@@ -163,7 +220,6 @@ public class Menu {
         System.out.println("3. Ver um pedido e total");
         System.out.println("4. Listar todos os pedidos");
         System.out.println("5. Voltar");
-
 
         secondSelection = sc.nextInt();
     }
