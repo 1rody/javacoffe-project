@@ -157,10 +157,15 @@ public class Menu {
                 String coffeDescription = sc.nextLine();
                 System.out.print("Preco: ");
                 double coffePrice = sc.nextDouble();
+                sc.nextLine();
                 System.out.print("Lactose: (s/n)");
                 boolean coffeLactose = sc.nextLine().equalsIgnoreCase("s");
 
+                //cria o novo cafe
                 Coffee coffee = new Coffee(coffeName, coffePrice, coffeDescription, coffeLactose);
+                //adiciona o novo cafe
+                coffeService.addCoffee(coffee);
+
                 System.out.println(" Cafe cadastrado!");
                 break;
 
