@@ -1,11 +1,14 @@
 package cafeteria.view;
 
+import cafeteria.entities.Coffee;
 import cafeteria.entities.Employee;
 import cafeteria.entities.ExternalEmployee;
 import cafeteria.entities.Client;
+
 import cafeteria.services.ClientService;
 import cafeteria.services.EmployeeService;
 import cafeteria.services.OrderService;
+import cafeteria.services.CoffeService;
 
 import java.util.Scanner;
 
@@ -16,6 +19,7 @@ public class Menu {
     private EmployeeService employeeService = new EmployeeService();
     private ClientService clientService = new ClientService();
     private OrderService orderService = new OrderService();
+    private CoffeService coffeService = new CoffeService();
 
     //diferente de main aqui a cafeteria ja foi criada
     public void start() {
@@ -58,6 +62,8 @@ public class Menu {
 
         System.out.println("1- Cadastro de funcionario");
         System.out.println("2- Remocao de funcionario");
+        System.out.println("3- Lista de funcionarios");
+        System.out.println("4- Cadastro de cafe");
         System.out.println("0- Sair");
 
         int secondSelection;
@@ -71,7 +77,6 @@ public class Menu {
 
                 System.out.println("1- Cadastro de funcionario");
                 System.out.println("2- Cadastro de funcionario Terceirizado");
-
                 thirdSelection = sc.nextInt();
 
                 switch (thirdSelection) {
@@ -140,29 +145,40 @@ public class Menu {
                     System.out.println("Funcionario nao encontrado!");
                 }
                 break;
+            case 3:
+                //foreach para leitura de funcionarios
+                break;
+            case 4:
+                System.out.println(" Cadastro de items ao menu");
+                sc.nextLine();
+                System.out.print("Nome do CAFE: ");
+                String coffeName = sc.nextLine();
+                System.out.print("Descricao: ");
+                String coffeDescription = sc.nextLine();
+                System.out.print("Preco: ");
+                double coffePrice = sc.nextDouble();
+                sc.nextLine();
+                System.out.print("Lactose: (s/n)");
+                boolean coffeLactose = sc.nextLine().equalsIgnoreCase("s");
 
+                //cria o novo cafe
+                Coffee coffee = new Coffee(coffeName, coffePrice, coffeDescription, coffeLactose);
+                //adiciona o novo cafe
+                coffeService.addCoffee(coffee);
+
+                System.out.println(" Cafe cadastrado!");
+                break;
 
         }
 
-        if (secondSelection >= 3) {
+        if (secondSelection >= 5) {
             System.out.println("Opcao invalida favor tente novamente!");
         }
 
     }
     private  void clientMenu() {
         int secondSelection;
-//        int password;
-//
-//        System.out.println("=====THE BEST COFFE STAFF=====");
-//        System.out.println("Insira a senha local para login");
-//        password = sc.nextInt();
-//
-//        while(password != 12345) {
-//            System.out.println("Senha invalida favor tente novamente!");
-//            password = sc.nextInt();
-//        };
-//
-// n sei se precisa de senha pra cadastrar cliente mas ja ta aq Caso
+        //precisa n so criei a senha de ex pra validar o menu de funcionario
 
         System.out.println("Digite a opcao para realizar a acao");
 
@@ -207,6 +223,8 @@ public class Menu {
             default:
                 System.out.println("Opcao invalida!");
                 System.out.println("Digite 1, 2 ou 0 para sair");
+                break;
+
         }
     }
 
