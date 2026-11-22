@@ -195,7 +195,7 @@ public class Menu {
                 break;
             case 1:
                 System.out.println("=====CADASTRO DE CLIENTE======");
-                System.out.print("Nome: ");
+                System.out.print("Nome: ");`
                 String name=sc.nextLine();
 
                 System.out.print("\nE-Mail: ");
