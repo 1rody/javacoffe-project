@@ -205,6 +205,7 @@ public class Menu {
                 String cpf=sc.nextLine();
 
                 Client client = new Client(name, email, cpf);
+                clientService.addClient(client);
                 break;
             case 2:
                 System.out.println("=====REMOCAO DE CLIENTE=====");
