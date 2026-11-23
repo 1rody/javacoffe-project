@@ -4,16 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Coffee {
-    private String coffeename; //perguntar o nome para o cliente no "Programa.java"
+    private String coffeename;
     private List<String> coffeeList = new ArrayList<>();
-    private Double price =0.0; //defini como 0.0 para garantir que caso nao tenha prco nao de null
+    private Double price =0.0;
     private String description;
     private Boolean lactose = false;
 
-    public Coffee() {}
+    public Coffee() {
+        tipos();
+    }
 
     public Coffee(String coffeename, Double price, String description, Boolean lactose){
-        this.tipos();
+        tipos();
         this.coffeename = coffeename;
         this.price = price;
         this.description = description;
@@ -60,7 +62,6 @@ public class Coffee {
     }
 
     private void tipos(){
-        //achei melhor add assim pq se aumentar a variedade deixar para colocar na área do encapsulamento fica ruim
         this.coffeeList.add("Expresso");
         this.coffeeList.add("Macchiato");
         this.coffeeList.add("Mocaccino");
@@ -68,12 +69,18 @@ public class Coffee {
         this.coffeeList.add("Latte");
     }
 
-    public String exibirTipos(){
+    public void exibirTipos(){
         //exibe os tipos.
-        return "|Tipos disponíveis: " + coffeeList;
+        if (coffeeList.isEmpty()) {
+            System.out.println("|Nenhum tipo disponível no estoque.");
+        }
+        System.out.println("|Tipos disponíveis:");
+        for (int i = 0; i < coffeeList.size(); i++) {
+            System.out.println("  " + (i + 1) + " - " + coffeeList.get(i));
+        }
     }
 
-    public void controle(){
+    public void controle(String coffeename){
         //Para o toString exibir o item com o preço certo com base na escolha do cliente na interface do 'Programa.java'
         switch(coffeename){
             //Obs: precisa decidir como precificar
@@ -128,11 +135,12 @@ public class Coffee {
                 break;
 
             default:
-                System.out.println("Erro: <Nenhum tipo válido>");
+                System.out.println("Erro: <Nenhum tipo válido>\n");
+                controle(coffeename);
         }
     }
 
-    public String statusLactose(){
+    public String statusLactose(Boolean lactose){
         //status de intolerância (tem ou não)
         if(lactose==true){
             return "|Cliente declarou que possui Intolerância à lactose.";
@@ -148,7 +156,7 @@ public class Coffee {
                 coffeename+"\n|Valor do produto: "+
                 price+"\n|Descrição do produto: "+
                 description+"\n|Situação de Intolerância à lactose:"+
-                statusLactose();
+                statusLactose(lactose);
     }
 
 }

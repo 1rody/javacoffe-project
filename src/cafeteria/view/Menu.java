@@ -1,15 +1,14 @@
 package cafeteria.view;
 
+import cafeteria.entities.Client;
 import cafeteria.entities.Coffee;
 import cafeteria.entities.Employee;
 import cafeteria.entities.ExternalEmployee;
-import cafeteria.entities.Client;
-
+import cafeteria.entities.Order;
 import cafeteria.services.ClientService;
+import cafeteria.services.CoffeService;
 import cafeteria.services.EmployeeService;
 import cafeteria.services.OrderService;
-import cafeteria.services.CoffeService;
-
 import java.util.Scanner;
 
 public class Menu {
@@ -58,12 +57,12 @@ public class Menu {
         };
 
         System.out.println("=====THE BEST COFFE STAFF =====");
-        System.out.println("Digite a opcao para realizar a acao");
+        System.out.println("Digite a opção para realizar a ação");
 
-        System.out.println("1- Cadastro de funcionario");
-        System.out.println("2- Remocao de funcionario");
-        System.out.println("3- Lista de funcionarios");
-        System.out.println("4- Cadastro de cafe");
+        System.out.println("1- Cadastro de funcionários");
+        System.out.println("2- Remoção de funcionários");
+        System.out.println("3- Lista de funcionários");
+        System.out.println("4- Cadastro dos cafés");
         System.out.println("0- Sair");
 
         int secondSelection;
@@ -73,15 +72,14 @@ public class Menu {
         switch (secondSelection) {
             case 1:
 
-                System.out.println("Cadastro de funcionario:");
-
-                System.out.println("1- Cadastro de funcionario");
-                System.out.println("2- Cadastro de funcionario Terceirizado");
+                System.out.println("Cadastro de funcionários:");
+                System.out.println("1- Cadastro de funcionários");
+                System.out.println("2- Cadastro de funcionários Terceirizados");
                 thirdSelection = sc.nextInt();
 
                 switch (thirdSelection) {
                     case 1:
-                        System.out.println(" Cadastro de funcionario CLT");
+                        System.out.println(" Cadastro de funcionário CLT");
 
                         sc.nextLine();
                         System.out.print("Nome: ");
@@ -95,15 +93,15 @@ public class Menu {
                         sc.nextLine();
                         System.out.print("Cargo: ");
                         String occupation = sc.nextLine();
-                        System.out.print("Salario: ");
+                        System.out.print("Salário: ");
                         double salary = sc.nextDouble();
 
                         Employee employee = new Employee(name, email, cpf, id, occupation, salary);
                         employeeService.addEmployee(employee);
-                        System.out.println("Funcionario cadastrado!");
+                        System.out.println("Funcionário cadastrado!");
                         break;
                     case 2:
-                        System.out.println(" Cadastro de funcionario Terceirizado");
+                        System.out.println(" Cadastro de funcionário Terceirizado");
                         sc.nextLine();
                         System.out.print("Nome: ");
                         String tname = sc.nextLine();
@@ -116,7 +114,7 @@ public class Menu {
                         sc.nextLine();
                         System.out.print("Cargo: ");
                         String toccupation = sc.nextLine();
-                        System.out.print("Salario: ");
+                        System.out.print("Salário: ");
                         double tsalary = sc.nextDouble();
                         sc.nextLine();
                         System.out.print("Empresa: ");
@@ -128,21 +126,21 @@ public class Menu {
 
                         ExternalEmployee tEmployee = new ExternalEmployee(tname, temail, tcpf, tid, toccupation, tsalary, company, hourValue, hourWorked);
                         employeeService.addEmployee(tEmployee);
-                        System.out.println("Funcionario terceirizado cadastrado!");
+                        System.out.println("Funcionário terceirizado cadastrado!");
                         break;
 
                 }
             break;
             case 2:
-                System.out.print("REMOCAO DE FUNCIONARIO ");
+                System.out.print("REMOÇÃO DE FUNCIONÁRIO ");
                 sc.nextLine();
-                System.out.print("CPF do funcionario: ");
+                System.out.print("CPF do funcionário: ");
                 String cpf = sc.nextLine();
 
                 if (employeeService.removeEmployee(cpf)) {
-                    System.out.println("Funcionario removido!");
+                    System.out.println("Funcionário removido!");
                 } else {
-                    System.out.println("Funcionario nao encontrado!");
+                    System.out.println("Funcionário nao encontrado!");
                 }
                 break;
             case 3:
@@ -151,11 +149,11 @@ public class Menu {
             case 4:
                 System.out.println(" Cadastro de items ao menu");
                 sc.nextLine();
-                System.out.print("Nome do CAFE: ");
+                System.out.print("Nome do CAFÉ: ");
                 String coffeName = sc.nextLine();
-                System.out.print("Descricao: ");
+                System.out.print("Descrição: ");
                 String coffeDescription = sc.nextLine();
-                System.out.print("Preco: ");
+                System.out.print("Preço: ");
                 double coffePrice = sc.nextDouble();
                 sc.nextLine();
                 System.out.print("Lactose: (s/n)");
@@ -166,7 +164,7 @@ public class Menu {
                 //adiciona o novo cafe
                 coffeService.addCoffee(coffee);
 
-                System.out.println(" Cafe cadastrado!");
+                System.out.println(" Café cadastrado!");
                 break;
 
         }
@@ -240,5 +238,56 @@ public class Menu {
         System.out.println("5. Voltar");
 
         secondSelection = sc.nextInt();
+        sc.nextLine();
+
+        String coffeename;
+        int sclactose;
+        boolean lactose = false;
+        switch (secondSelection) {
+            case 1:
+                System.out.println("\nCriando pedido...");
+                Order newOrder = new Order();
+                System.out.println("Indo para a seção de produtos...");
+                System.out.println("\nExibindo os produtos...\n");
+                Coffee coffe = new Coffee();
+                coffe.exibirTipos();
+                System.out.println("\n> Qual café deseja selecionar?\n");
+                coffeename = sc.nextLine();
+                coffe.setCoffeename(coffeename);
+                coffe.controle(coffeename);
+                System.out.println("\nPossui intolerância à lactose?\n1- Possuo.\n0- Não possuo.");
+                sclactose = sc.nextInt();
+                while (sclactose != 0 && sclactose != 1) {
+                System.out.println("Valor inválido! Digite 0 ou 1.");
+                sclactose = sc.nextInt();
+                sc.nextLine();
+                }
+                lactose = (sclactose == 1);
+                coffe.setLactose(lactose);
+                System.out.println(coffe.statusLactose(lactose));
+                System.out.println(coffe.toString());
+                orderService.addOrder(newOrder);
+                break;
+            case 2:
+                System.out.println("Qual o id do pedido que deseja remover?");
+                System.out.print("ID do pedido: ");
+                Integer id = sc.nextInt();
+                sc.nextLine();
+                orderService.removeOrder(id);
+                System.out.println("Pedido removido!");
+                break;
+            case 3:
+                
+                break;
+            case 4:
+
+                break;
+            case 5:
+                start();
+                break;
+            default:
+                System.out.println("Erro: Valor inválido.\nValores válidos: {1. Novo pedido, 2. Remover pedido, 3. Ver um pedido e total, 4. Listar todos os pedidos, 5. Voltar}\n");
+                orderMenu();
+        }
     }
 }
