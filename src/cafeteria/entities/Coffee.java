@@ -76,31 +76,33 @@ public class Coffee {
         }
         System.out.println("|Tipos disponíveis:");
         for (int i = 0; i < coffeeList.size(); i++) {
-            System.out.println("  " + (i + 1) + " - " + coffeeList.get(i));
+            System.out.println(coffeeList.get(i));
         }
     }
 
     public void controle(String coffeename){
+        double precoBase = 8.0;
+        this.coffeename = coffeename;
         //Para o toString exibir o item com o preço certo com base na escolha do cliente na interface do 'Programa.java'
         switch(coffeename){
             //Obs: precisa decidir como precificar
             case "Expresso":
-
+                
                 System.out.println("|Expresso (Descrição completa):\nBase: Café extraído sob alta pressão (9 bars) em água quente.\n\nProporção: 100% café concentrado (sem adição de leite).\n\nVolume médio: 30 ml a 40 ml.\n\nPerfil sensorial: Encorpado, intenso, com acidez equilibrada, amargor pronunciado e uma camada densa de espuma dourada na superfície (crema).\n\nServiço: Xícara pequena (demitasse) pré-aquecida.");
 
                 description = "|Expresso[Café muito intenso; 100% de expresso; s/leite; 30-40 ml ; Xícara pequena.]";
 
-                //price = 
+                this.price = precoBase;
 
                 break;
 
             case "Macchiato":
-
+                
                 System.out.println("|Macchiato (Descrição completa):\nBase: Café expresso com uma pequena quantidade de leite vaporizado.\n\nProporção: ~85% café expresso e ~15% espuma de leite.\n\nVolume médio: 40 ml a 50 ml.\n\nPerfil sensorial: Mantém a intensidade e o corpo do expresso, mas com a acidez suavizada e um leve toque adocicado da microespuma de leite (\"manchado\" na superfície).\n\nServiço: Xícara pequena (demitasse).");
 
                 description = "|Macchiato[Café intenso; 85% de expresso; c/leite (15% de espuma); 40-50 ml ; Xícara pequena.]";
 
-                //price = 
+                this.price = precoBase + 2.0;
 
                 break;
 
@@ -110,7 +112,7 @@ public class Coffee {
 
                 description = "|Mocaccino[Café Suave / Doce; 20% de expresso; c/leite (15% de espuma + 50% de leite vaporizado - 65%); 200-250 ml; 15% de chocolate; Xícara grande ou Copo alto de vidro.]";
 
-                //price = 
+                this.price = precoBase + 5.5;
 
                 break;
 
@@ -120,7 +122,7 @@ public class Coffee {
 
                 description = "|Cappuccino[Café Médio; 33% de expresso; c/leite (33,5% de espuma densa + 33,5% de leite vaporizado - 67%); 150 - 180 ml; Xícara média com boca larga.]";
 
-                //price = 
+                this.price = precoBase + 4.0;
 
                 break;
 
@@ -130,7 +132,7 @@ public class Coffee {
 
                 description = "|Latte[Café suave; 20% de expresso; c/leite (70% de leite vaporizado + 10% camada fina de microespuma - 80%); 240-300 ml; Xícara grande ou Copo alto de vidro.]";
 
-                //price = 
+                this.price = precoBase + 5.0;
 
                 break;
 

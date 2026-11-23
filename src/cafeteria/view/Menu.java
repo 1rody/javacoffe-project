@@ -251,7 +251,7 @@ public class Menu {
                 System.out.println("\nExibindo os produtos...\n");
                 Coffee coffe = new Coffee();
                 coffe.exibirTipos();
-                System.out.println("\n> Qual café deseja selecionar?\n");
+                System.out.println("\n> Qual café deseja selecionar? (Nome)\n");
                 coffeename = sc.nextLine();
                 coffe.setCoffeename(coffeename);
                 coffe.controle(coffeename);
@@ -262,7 +262,11 @@ public class Menu {
                 sclactose = sc.nextInt();
                 sc.nextLine();
                 }
-                lactose = (sclactose == 1);
+                if (sclactose == 1) {
+                    lactose = true;
+                } else {
+                    lactose = false;
+                }
                 coffe.setLactose(lactose);
                 System.out.println(coffe.statusLactose(lactose));
                 System.out.println(coffe.toString());
