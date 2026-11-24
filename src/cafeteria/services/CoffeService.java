@@ -3,6 +3,7 @@ package cafeteria.services;
 import cafeteria.entities.Coffee;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class CoffeService {
     private ArrayList<Coffee> coffees = new ArrayList<>();
@@ -37,6 +38,12 @@ public class CoffeService {
         return coffees.removeIf(e -> e.getCoffeename().equals(name));
     }
 
+    public ArrayList<Coffee> getCoffeesSorted() {
+        ArrayList<Coffee> sorted = new ArrayList<>(coffees); //copia da lista original
+        sorted.sort(Comparator.comparing(c -> c.getCoffeename())); //ordena por nome do cafe
+        return sorted;
+    }
+
     public Coffee searchCoffee(String name) {
         for (Coffee coffee : coffees) {
             if (coffee.getCoffeename().equalsIgnoreCase(name)) {
@@ -44,6 +51,17 @@ public class CoffeService {
             }
         }
         return null;
+    }
+
+    public boolean updateCoffee(String name, Double price, String description, Boolean lactose) {
+        Coffee coffee = searchCoffee(name);
+        if (coffee == null) {
+            return false; //nao achou o cafe
+        }
+        coffee.setPrice(price);
+        coffee.setDescription(description);
+        coffee.setLactose(lactose);
+        return true;
     }
 
     public ArrayList<Coffee> getCoffees() {

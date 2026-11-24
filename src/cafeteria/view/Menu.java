@@ -16,10 +16,20 @@ public class Menu {
     //scanner do menu privado
     private Scanner sc = new Scanner(System.in);
 
-    private EmployeeService employeeService = new EmployeeService();
-    private ClientService clientService = new ClientService();
-    private OrderService orderService = new OrderService();
-    private CoffeService coffeService = new CoffeService();
+    private final EmployeeService employeeService;
+    private final ClientService clientService;
+    private final OrderService orderService;
+    private final CoffeService coffeService;
+
+    //injecao de dependencia: os services sao criados fora e recebidos aqui
+    public Menu(EmployeeService employeeService, ClientService clientService,
+                    OrderService orderService, CoffeService coffeService) {
+        this.employeeService = employeeService;
+        this.clientService = clientService;
+        this.orderService = orderService;
+        this.coffeService = coffeService;
+    }
+
 
     //diferente de main aqui a cafeteria ja foi criada
     public void start() {
@@ -63,8 +73,13 @@ public class Menu {
         System.out.println("1- Cadastro de funcionários");
         System.out.println("2- Remoção de funcionários");
         System.out.println("3- Lista de funcionários");
-        System.out.println("4- Cadastro dos cafés");
-        System.out.println("0- Sair");
+        System.out.println("4- Lista de funcionários ordenada por nome");
+        System.out.println("5- Cadastro dos cafés");
+        System.out.println("6- Alterar funcionário"); //novo
+        System.out.println("7- Remover café"); //novo
+        System.out.println("8- Alterar café"); //novo
+        System.out.println("9- Lista de cafés"); //novo
+        System.out.println("10- Lista de cafés ordenada por nome"); //novo
 
         int secondSelection;
         int thirdSelection;
@@ -131,7 +146,7 @@ public class Menu {
                         break;
 
                 }
-            break;
+                break;
             case 2:
                 System.out.print("REMOÇÃO DE FUNCIONÁRIO ");
                 sc.nextLine();
@@ -150,28 +165,57 @@ public class Menu {
                     System.out.println("Nenhum funcionário cadastrado!");
                 } else {
                     System.out.println("\nExibindo os funcionários...\n");
-                    for (Employee emp : employeeService.getEmployees()) {
-                        System.out.println("| Nome: " + emp.getName());
-                        System.out.println("| E-Mail: " + emp.getEmail());
-                        System.out.println("| CPF: " + emp.getCpf());
-                        System.out.println("| ID: " + emp.getId());
-                        System.out.println("| Cargo: " + emp.getOccupation());
+                    System.out.printf("%-5s | %-15s | %-25s | %-15s | %-15s | %-20s | %-12s%n",
+                            "ID", "NOME", "E-MAIL", "CPF", "CARGO", "TIPO/EMPRESA", "PAGAMENTO");
+                    System.out.println("------------------------------------------------------------------------------------------------------------------------");
 
+                    for (Employee emp : employeeService.getEmployees()) {
+                        String tipoInfo = "CLT";
                         if (emp instanceof ExternalEmployee) {
                             ExternalEmployee external = (ExternalEmployee) emp;
-                            System.out.println("| Tipo: Terceirizado");
-                            System.out.println("| Empresa: " + external.getCompanyName());
-                            System.out.println("| Valor da hora: R$ " + String.format("%.2f", external.getHourValue()));
-                            System.out.println("| Horas trabalhadas: " + external.getHourWorked());
-                        } else {
-                            System.out.println("| Tipo: CLT");
+                            tipoInfo = "Terc. (" + external.getCompanyName() + ")";
                         }
 
-                        System.out.println("| Pagamento: R$ " + String.format("%.2f", emp.calculatePayment()) + "\n");
+                        System.out.printf("%-5d | %-15s | %-25s | %-15s | %-15s | %-20s | R$ %8.2f%n",
+                                emp.getId(),
+                                emp.getName(),
+                                emp.getEmail(),
+                                emp.getCpf(),
+                                emp.getOccupation(),
+                                tipoInfo,
+                                emp.calculatePayment());
                     }
                 }
                 break;
             case 4:
+                System.out.println("=====LISTA DE FUNCIONÁRIOS ORDENADA=====");
+                if (employeeService.getEmployeesSorted().isEmpty()) {
+                    System.out.println("Nenhum funcionário cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os funcionários...\n");
+                    System.out.printf("%-5s | %-15s | %-25s | %-15s | %-15s | %-20s | %-12s%n",
+                            "ID", "NOME", "E-MAIL", "CPF", "CARGO", "TIPO/EMPRESA", "PAGAMENTO");
+                    System.out.println("------------------------------------------------------------------------------------------------------------------------");
+
+                    for (Employee emp : employeeService.getEmployeesSorted()) {
+                        String tipoInfo = "CLT";
+                        if (emp instanceof ExternalEmployee) {
+                            ExternalEmployee external = (ExternalEmployee) emp;
+                            tipoInfo = "Terc. (" + external.getCompanyName() + ")";
+                        }
+
+                        System.out.printf("%-5d | %-15s | %-25s | %-15s | %-15s | %-20s | R$ %8.2f%n",
+                                emp.getId(),
+                                emp.getName(),
+                                emp.getEmail(),
+                                emp.getCpf(),
+                                emp.getOccupation(),
+                                tipoInfo,
+                                emp.calculatePayment());
+                    }
+                }
+                break;
+            case 5:
                 System.out.println(" Cadastro de items ao menu");
                 sc.nextLine();
                 System.out.print("Nome do CAFÉ: ");
@@ -197,7 +241,113 @@ public class Menu {
 
                 System.out.println(" Café cadastrado!");
                 break;
+            case 6:
+                System.out.println("=====ALTERAR FUNCIONÁRIO=====");
+                sc.nextLine(); //limpa o enter que sobrou do nextInt
+                System.out.print("CPF do funcionário: ");
+                String alterCpf = sc.nextLine();
 
+                Employee foundEmployee = employeeService.searchEmployee(alterCpf);
+                if (foundEmployee == null) {
+                    System.out.println("Funcionário nao encontrado!");
+                    break; //sai do switch
+                }
+
+                System.out.println("Digite os novos dados:");
+                System.out.print("Nome: ");
+                String alterName = sc.nextLine();
+                System.out.print("E-Mail: ");
+                String alterEmail = sc.nextLine();
+                System.out.print("ID: ");
+                int alterId = sc.nextInt();
+                sc.nextLine();
+                System.out.print("Cargo: ");
+                String alterOccupation = sc.nextLine();
+                System.out.print("Salário: ");
+                double alterSalary = sc.nextDouble();
+                employeeService.updateEmployee(alterCpf, alterName, alterEmail, alterId, alterOccupation, alterSalary);
+
+                //se for terceirizado, pede tambem os dados extras
+                if (foundEmployee instanceof ExternalEmployee) {
+                    sc.nextLine();
+                    System.out.print("Empresa: ");
+                    String alterCompany = sc.nextLine();
+                    System.out.print("Valor da hora: ");
+                    double alterHourValue = sc.nextDouble();
+                    System.out.print("Horas trabalhadas: ");
+                    double alterHourWorked = sc.nextDouble();
+                    employeeService.updateExternalEmployee(alterCpf, alterCompany, alterHourValue, alterHourWorked);
+                }
+                System.out.println("Funcionário alterado!");
+                break;
+            case 7:
+                System.out.println("=====REMOVER CAFÉ=====");
+                sc.nextLine(); //limpa o enter que sobrou do nextInt
+                System.out.print("Nome do café: ");
+                String removeCoffeeName = sc.nextLine();
+
+                if (coffeService.removeCoffee(removeCoffeeName)) {
+                    System.out.println("Café removido!");
+                } else {
+                    System.out.println("Café nao encontrado!");
+                }
+                break;
+            case 8:
+                System.out.println("=====ALTERAR CAFÉ=====");
+                sc.nextLine(); //limpa o enter que sobrou do nextInt
+                System.out.print("Nome do café: ");
+                String alterCoffeeName = sc.nextLine();
+
+                if (coffeService.searchCoffee(alterCoffeeName) == null) {
+                    System.out.println("Café nao encontrado!");
+                    break; //sai do switch
+                }
+
+                System.out.print("Novo preço: ");
+                double alterCoffeePrice = sc.nextDouble();
+                sc.nextLine();
+                System.out.print("Nova descrição: ");
+                String alterCoffeeDescription = sc.nextLine();
+                System.out.print("Contém lactose: (s/n)");
+                boolean alterCoffeeLactose = sc.nextLine().equalsIgnoreCase("s");
+
+                coffeService.updateCoffee(alterCoffeeName, alterCoffeePrice, alterCoffeeDescription, alterCoffeeLactose);
+                System.out.println("Café alterado!");
+                break;
+            case 9:
+                System.out.println("=====LISTA DE CAFÉS=====");
+                if (coffeService.getCoffees().isEmpty()) {
+                    System.out.println("Nenhum café cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os cafés...\n");
+                    for (Coffee item : coffeService.getCoffees()) { //ordem de cadastro
+                        System.out.println("| Nome: " + item.getCoffeename());
+                        System.out.println("| Preço: R$ " + String.format("%.2f", item.getPrice()));
+                        if (item.getLactose()) {
+                            System.out.println("| Contém lactose: Sim\n");
+                        } else {
+                            System.out.println("| Contém lactose: Não\n");
+                        }
+                    }
+                }
+                break;
+            case 10:
+                System.out.println("=====LISTA DE CAFÉS ORDENADA=====");
+                if (coffeService.getCoffees().isEmpty()) {
+                    System.out.println("Nenhum café cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os cafés...\n");
+                    for (Coffee item : coffeService.getCoffeesSorted()) { //ordenada por nome
+                        System.out.println("| Nome: " + item.getCoffeename());
+                        System.out.println("| Preço: R$ " + String.format("%.2f", item.getPrice()));
+                        if (item.getLactose()) {
+                            System.out.println("| Contém lactose: Sim\n");
+                        } else {
+                            System.out.println("| Contém lactose: Não\n");
+                        }
+                    }
+                }
+                break;
         }
 
         if (secondSelection >= 5) {
@@ -214,6 +364,8 @@ public class Menu {
         System.out.println("1- Cadastro de cliente");
         System.out.println("2- Remocao de cliente");
         System.out.println("3- Lista de clientes");
+        System.out.println("4- Lista de clientes ordenada por nome");
+        System.out.println("5- Alterar cliente");
         System.out.println("0- Sair");
 
         secondSelection=sc.nextInt();
@@ -257,11 +409,46 @@ public class Menu {
                     System.out.println("Nenhum cliente cadastrado!");
                 } else {
                     System.out.println("\nExibindo os clientes...\n");
+                    System.out.printf("%-20s | %-28s | %-15s%n", "NOME", "E-MAIL", "CPF");
+                    System.out.println("---------------------------------------------------------------------");
+
                     for (Client c : clientService.getClients()) {
-                        System.out.println("Nome: " + c.getName());
-                        System.out.println("E-Mail: " + c.getEmail());
-                        System.out.println("CPF: " + c.getCpf() + "\n");
+                        System.out.printf("%-20s | %-28s | %-15s%n",
+                                c.getName(),
+                                c.getEmail(),
+                                c.getCpf());
                     }
+                }
+                break;
+            case 4:
+                System.out.println("=====LISTA DE CLIENTES ORDENADA=====");
+                if (clientService.getClientsSorted().isEmpty()) {
+                    System.out.println("Nenhum cliente cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os clientes...\n");
+                    System.out.printf("%-20s | %-28s | %-15s%n", "NOME", "E-MAIL", "CPF");
+                    System.out.println("---------------------------------------------------------------------");
+
+                    for (Client c : clientService.getClientsSorted()) {
+                        System.out.printf("%-20s | %-28s | %-15s%n",
+                                c.getName(),
+                                c.getEmail(),
+                                c.getCpf());
+                    }
+                }
+            case 5:
+                System.out.println("=====ALTERAR CLIENTE=====");
+                System.out.print("CPF do cliente: ");
+                String alterCpf = sc.nextLine();
+                System.out.print("Novo nome: ");
+                String alterName = sc.nextLine();
+                System.out.print("Novo E-Mail: ");
+                String alterEmail = sc.nextLine();
+
+                if (clientService.updateClient(alterCpf, alterName, alterEmail)) {
+                    System.out.println("Cliente alterado!");
+                } else {
+                    System.out.println("Cliente nao encontrado!");
                 }
                 break;
             default:
@@ -281,7 +468,9 @@ public class Menu {
         System.out.println("2. Remover pedido");
         System.out.println("3. Ver um pedido e total");
         System.out.println("4. Listar todos os pedidos");
-        System.out.println("5. Voltar");
+        System.out.println("5. Listar pedidos ordenados por total");
+        System.out.println("6. Alterar pedido");
+        System.out.println("0. Voltar");
 
         secondSelection = sc.nextInt();
         sc.nextLine();
@@ -396,25 +585,98 @@ public class Menu {
                 if (foundOrder == null) {
                     System.out.println("Pedido não encontrado!");
                 } else {
-                    System.out.println("\nExibindo pedido...\n");
-                    System.out.println(foundOrder.toString());
-                    System.out.println("\n Total do pedido: R$ " + String.format("%.2f", foundOrder.total()));
+                    System.out.println("\nExibindo os pedidos...\n");
+                    System.out.printf("%-5s | %-20s | %-10s | %-12s%n", "ID", "CLIENTE", "QTD ITENS", "TOTAL");
+                    System.out.println("--------------------------------------------------------");
+
+                    for (Order o : orderService.getOrders()) {
+                        System.out.printf("%-5d | %-20s | %-10d | R$ %8.2f%n",
+                                o.getId(),
+                                o.getClient().getName(),
+                                o.getCoffees().size(),
+                                o.total());
+                    }
                 }
+
                 break;
             case 4:
                 System.out.println("=====LISTA DE PEDIDOS=====");
                 if (orderService.getOrders().isEmpty()) {
-                    System.out.println("Nenhum pedido cadastrado!");
+                    System.out.printf("Nenhum pedido cadastrado!");
                 } else {
                     System.out.println("\nExibindo os pedidos...\n");
+                    System.out.printf("%-5s | %-20s | %-10s | %-12s%n", "ID", "CLIENTE", "QTD ITENS", "TOTAL");
+                    System.out.println("--------------------------------------------------------");
+
                     for (Order o : orderService.getOrders()) {
-                        System.out.println(o.toString());
-                        System.out.println("| Total do pedido: R$ " + String.format("%.2f", o.total()) + "\n");
+                        System.out.printf("%-5d | %-20s | %-10d | R$ %8.2f%n",
+                                o.getId(),
+                                o.getClient().getName(),
+                                o.getCoffees().size(),
+                                o.total());
                     }
                 }
                 break;
             case 5:
-                start();
+                System.out.println("=====LISTA DE PEDIDOS ORDENADA=====");
+                if (orderService.getOrdersSorted().isEmpty()) {
+                    System.out.printf("Nenhum pedido cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os pedidos...\n");
+                    System.out.printf("%-5s | %-20s | %-10s | %-12s%n", "ID", "CLIENTE", "QTD ITENS", "TOTAL");
+                    System.out.println("--------------------------------------------------------");
+
+                    for (Order o : orderService.getOrdersSorted()) {
+                        System.out.printf("%-5d | %-20s | %-10d | R$ %8.2f%n",
+                                o.getId(),
+                                o.getClient().getName(),
+                                o.getCoffees().size(),
+                                o.total());
+                    }
+                }
+            case 6:
+                System.out.println("=====ALTERAR PEDIDO=====");
+                System.out.print("ID do pedido: ");
+                Integer alterId = sc.nextInt();
+                sc.nextLine();
+
+                if (orderService.orderSearch(alterId) == null) {
+                    System.out.println("Pedido não encontrado!");
+                    break; //sai do switch
+                }
+
+                System.out.println("\n| Tipos disponíveis:");
+                for (Coffee item : coffeService.getCoffees()) {
+                    System.out.println("| " + item.getCoffeename() + " - R$ " + String.format("%.2f", item.getPrice()));
+                }
+
+                //repete ate o usuario digitar um cafe que existe
+                Coffee alterSelected = null;
+                while (alterSelected == null) {
+                    System.out.println("\n> Digite o nome do novo café:\n");
+                    coffeename = sc.nextLine();
+                    alterSelected = coffeService.searchCoffee(coffeename);
+                    if (alterSelected == null) {
+                        System.out.println("Erro: <Nenhum tipo válido>\n");
+                    }
+                }
+
+                System.out.println("\nPossui intolerância à lactose?\n1- Possuo.\n0- Não possuo.");
+                sclactose = sc.nextInt();
+                sc.nextLine();
+                while (sclactose != 0 && sclactose != 1) {
+                    System.out.println("Valor inválido! Digite 0 ou 1.");
+                    sclactose = sc.nextInt();
+                    sc.nextLine();
+                }
+                lactose = (sclactose == 1);
+
+                //copia do cafe do cardapio, para a lactose do cliente nao alterar o cadastro do cafe
+                Coffee alterCoffee = new Coffee(alterSelected.getCoffeename(), alterSelected.getPrice(), alterSelected.getDescription(), lactose);
+                orderService.updateOrderCoffee(alterId, alterCoffee);
+                System.out.println("\nPedido alterado!");
+                break;
+            case 0:
                 break;
             default:
                 System.out.println("Erro: Valor inválido.\nValores válidos: {1. Novo pedido, 2. Remover pedido, 3. Ver um pedido e total, 4. Listar todos os pedidos, 5. Voltar}\n");
