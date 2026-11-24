@@ -6,22 +6,17 @@ import cafeteria.entities.Order;
 public class OrderService{
 	private ArrayList <Order> orders = new ArrayList<>();
 
-    //adicionar no array
+	//adicionar no array
 	public void addOrder(Order order){
 		orders.add(order);
 	}
 
-    //remover do array
+	//remover do array
 	public boolean removeOrder(Integer id){
-		for (Order order: orders){
-			if (order.getId().equals(id)){
-				orders.remove(order);
-				return true;
-			}
-		}
-		return false;
+		return orders.removeIf(order -> order.getId().equals(id));
 	}
-    //pesquisar no array
+
+	//pesquisar no array
 	public Order orderSearch(Integer id){
 		for (Order order: orders){
 			if(order.getId().equals(id)){
@@ -30,7 +25,8 @@ public class OrderService{
 		}
 		return null;
 	}
-    // get do awway
+
+	// get do awway
 	public ArrayList<Order> getOrders(){
 		return orders;
 	}
