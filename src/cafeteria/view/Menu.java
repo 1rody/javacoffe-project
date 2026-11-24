@@ -444,6 +444,7 @@ public class Menu {
                                 c.getCpf());
                     }
                 }
+                break;
             case 5:
                 System.out.println("=====ALTERAR CLIENTE=====");
                 System.out.print("CPF do cliente: ");
