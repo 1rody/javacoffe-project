@@ -358,7 +358,7 @@ public class Menu {
                 break;
         }
 
-        if (secondSelection >= 5) {
+        if (secondSelection >= 11) {
             System.out.println("Opcao invalida favor tente novamente!");
         }
 
@@ -600,7 +600,7 @@ public class Menu {
                 if (foundOrder == null) {
                     System.out.println("Pedido não encontrado!");
                 } else {
-                    System.out.println("\nExibindo os pedidos...\n");
+                    System.out.println("\nExibindo o pedido...\n");
                     System.out.printf("%-5s | %-20s | %-10s | %-12s%n", "ID", "CLIENTE", "QTD ITENS", "TOTAL");
                     System.out.println("--------------------------------------------------------");
 
@@ -649,6 +649,7 @@ public class Menu {
                                 o.total());
                     }
                 }
+                break;
             case 6:
                 System.out.println("=====ALTERAR PEDIDO=====");
                 System.out.print("ID do pedido: ");

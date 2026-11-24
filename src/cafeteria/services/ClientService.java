@@ -14,8 +14,8 @@ public class ClientService {
         clients.add(client);
     }
     /** Remove o cliente pelo CPF; retorna true se removeu. */
-    public boolean removeClient(String nameOrCpf){
-        return clients.removeIf(e -> e.getCpf().equals(nameOrCpf));
+    public boolean removeClient(String cpf){
+        return clients.removeIf(e -> e.getCpf().equals(cpf));
     }
     /** Retorna os clientes na ordem de cadastro. */
     public ArrayList<Client> getClients(){
