@@ -10,6 +10,7 @@ import cafeteria.services.CoffeService;
 import cafeteria.services.EmployeeService;
 import cafeteria.services.OrderService;
 import java.util.Scanner;
+import java.util.List;
 
 public class Menu {
     //scanner do menu privado
@@ -144,19 +145,49 @@ public class Menu {
                 }
                 break;
             case 3:
-                //foreach para leitura de funcionarios
+                System.out.println("=====LISTA DE FUNCIONÁRIOS=====");
+                if (employeeService.getEmployees().isEmpty()) {
+                    System.out.println("Nenhum funcionário cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os funcionários...\n");
+                    for (Employee emp : employeeService.getEmployees()) {
+                        System.out.println("| Nome: " + emp.getName());
+                        System.out.println("| E-Mail: " + emp.getEmail());
+                        System.out.println("| CPF: " + emp.getCpf());
+                        System.out.println("| ID: " + emp.getId());
+                        System.out.println("| Cargo: " + emp.getOccupation());
+
+                        if (emp instanceof ExternalEmployee) {
+                            ExternalEmployee external = (ExternalEmployee) emp;
+                            System.out.println("| Tipo: Terceirizado");
+                            System.out.println("| Empresa: " + external.getCompanyName());
+                            System.out.println("| Valor da hora: R$ " + String.format("%.2f", external.getHourValue()));
+                            System.out.println("| Horas trabalhadas: " + external.getHourWorked());
+                        } else {
+                            System.out.println("| Tipo: CLT");
+                        }
+
+                        System.out.println("| Pagamento: R$ " + String.format("%.2f", emp.calculatePayment()) + "\n");
+                    }
+                }
                 break;
             case 4:
                 System.out.println(" Cadastro de items ao menu");
                 sc.nextLine();
                 System.out.print("Nome do CAFÉ: ");
                 String coffeName = sc.nextLine();
+
+                if (coffeService.searchCoffee(coffeName) != null) {
+                    System.out.println("Café já cadastrado!");
+                    break;
+                }
+
                 System.out.print("Descrição: ");
                 String coffeDescription = sc.nextLine();
                 System.out.print("Preço: ");
                 double coffePrice = sc.nextDouble();
                 sc.nextLine();
-                System.out.print("Lactose: (s/n)");
+                System.out.print("Contém lactose: (s/n)");
                 boolean coffeLactose = sc.nextLine().equalsIgnoreCase("s");
 
                 //cria o novo cafe
@@ -182,6 +213,7 @@ public class Menu {
 
         System.out.println("1- Cadastro de cliente");
         System.out.println("2- Remocao de cliente");
+        System.out.println("3- Lista de clientes");
         System.out.println("0- Sair");
 
         secondSelection=sc.nextInt();
@@ -203,24 +235,38 @@ public class Menu {
                 String cpf=sc.nextLine();
 
                 Client client = new Client(name, email, cpf);
+                clientService.addClient(client);
                 break;
             case 2:
                 System.out.println("=====REMOCAO DE CLIENTE=====");
 
-                System.out.print("Digite o nome/CPF do cliente: ");
-                String nameOrCpf;
+                System.out.print("Digite o CPF do cliente: ");
+                String cpfClient;
                 do {
-                    nameOrCpf=sc.nextLine();
-                    if(clientService.removeClient(nameOrCpf)){
+                    cpfClient =sc.nextLine();
+                    if(clientService.removeClient(cpfClient)){
                         System.out.println("Cliente removido!");
                     } else {
                         System.out.print("\nCliente nao encontrado\nTente novamente:");
                     }
-                } while(!clientService.removeClient(nameOrCpf));
+                } while(!clientService.removeClient(cpfClient));
+                break;
+            case 3:
+                System.out.println("=====LISTA DE CLIENTES=====");
+                if (clientService.getClients().isEmpty()) {
+                    System.out.println("Nenhum cliente cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os clientes...\n");
+                    for (Client c : clientService.getClients()) {
+                        System.out.println("Nome: " + c.getName());
+                        System.out.println("E-Mail: " + c.getEmail());
+                        System.out.println("CPF: " + c.getCpf() + "\n");
+                    }
+                }
                 break;
             default:
                 System.out.println("Opcao invalida!");
-                System.out.println("Digite 1, 2 ou 0 para sair");
+                System.out.println("Digite 1, 2, 3 ou 0 para sair");
                 break;
 
         }
@@ -246,45 +292,126 @@ public class Menu {
         switch (secondSelection) {
             case 1:
                 System.out.println("\nCriando pedido...");
-                Order newOrder = new Order();
+                System.out.print("ID do pedido: ");
+                int orderId = sc.nextInt();
+                sc.nextLine();
+
+                Client orderClient = null;
+                List<Client> registeredClients = clientService.getClients();
+
+                if (!registeredClients.isEmpty()) {
+                    System.out.println("\nClientes cadastrados:");
+                    for (int i = 0; i < registeredClients.size(); i++) {
+                        Client c = registeredClients.get(i);
+                        System.out.println((i + 1) + "- " + c.getName() + " (CPF: " + c.getCpf() + ")");
+                    }
+                    int newClientOption = registeredClients.size() + 1;
+                    System.out.println(newClientOption + "- Cadastrar novo cliente");
+                    System.out.print("Digite a opção: ");
+                    int clientOption = sc.nextInt();
+                    sc.nextLine();
+                    while (clientOption < 1 || clientOption > newClientOption) {
+                        System.out.println("Valor inválido! Digite um valor entre 1 e " + newClientOption + ".");
+                        clientOption = sc.nextInt();
+                        sc.nextLine();
+                    }
+                    if (clientOption != newClientOption) {
+                        orderClient = registeredClients.get(clientOption - 1);
+                    }
+                }
+
+                if (orderClient == null) {
+                    System.out.println("\nCadastro de novo cliente:");
+                    System.out.print("Nome do cliente: ");
+                    String clientName = sc.nextLine();
+                    System.out.print("E-Mail: ");
+                    String clientEmail = sc.nextLine();
+                    System.out.print("CPF: ");
+                    String clientCpf = sc.nextLine();
+
+                    orderClient = new Client(clientName, clientEmail, clientCpf);
+                    clientService.addClient(orderClient);
+                }
+
+                Order newOrder = new Order(orderId, orderClient);
+
                 System.out.println("Indo para a seção de produtos...");
                 System.out.println("\nExibindo os produtos...\n");
-                Coffee coffe = new Coffee();
-                coffe.exibirTipos();
-                System.out.println("\n> Qual café deseja selecionar? (Nome)\n");
-                coffeename = sc.nextLine();
-                coffe.setCoffeename(coffeename);
-                coffe.controle(coffeename);
+                System.out.println("| Tipos disponíveis:");
+                for (Coffee item : coffeService.getCoffees()) {
+                    System.out.println("| " + item.getCoffeename() + " - R$ " + String.format("%.2f", item.getPrice()));
+                }
+
+                Coffee selected = null;
+                while (selected == null) {
+                    System.out.println("\n> Digite o nome do café selecionado:\n");
+                    coffeename = sc.nextLine();
+                    selected = coffeService.searchCoffee(coffeename);
+                    if (selected == null) {
+                        System.out.println("Erro: <Nenhum tipo válido>\n");
+                    }
+                }
+                System.out.println("\n| Descrição: " + selected.getDescription());
+
                 System.out.println("\nPossui intolerância à lactose?\n1- Possuo.\n0- Não possuo.");
                 sclactose = sc.nextInt();
-                while (sclactose != 0 && sclactose != 1) {
-                System.out.println("Valor inválido! Digite 0 ou 1.");
-                sclactose = sc.nextInt();
                 sc.nextLine();
+                while (sclactose != 0 && sclactose != 1) {
+                    System.out.println("Valor inválido! Digite 0 ou 1.");
+                    sclactose = sc.nextInt();
+                    sc.nextLine();
                 }
-                if (sclactose == 1) {
-                    lactose = true;
-                } else {
-                    lactose = false;
+                lactose = (sclactose == 1);
+
+                //copia do item do cardápio, para a lactose do cliente não alterar o cadastro do café
+                Coffee coffe = new Coffee(selected.getCoffeename(), selected.getPrice(), selected.getDescription(), lactose);
+                if (lactose && selected.getLactose()) {
+                    System.out.println("|Atenção: este café contém lactose!");
                 }
-                coffe.setLactose(lactose);
                 System.out.println(coffe.statusLactose(lactose));
                 System.out.println(coffe.toString());
+
+                newOrder.addCoffee(coffe);
                 orderService.addOrder(newOrder);
+                System.out.println("\nPedido criado!");
                 break;
             case 2:
                 System.out.println("Qual o id do pedido que deseja remover?");
                 System.out.print("ID do pedido: ");
                 Integer id = sc.nextInt();
                 sc.nextLine();
-                orderService.removeOrder(id);
-                System.out.println("Pedido removido!");
+                if (orderService.removeOrder(id)) {
+                    System.out.println("Pedido removido!");
+                } else {
+                    System.out.println("Pedido não encontrado!");
+                }
                 break;
             case 3:
-                
+                System.out.println("=====VER PEDIDO E TOTAL=====");
+                System.out.print("ID do pedido: ");
+                Integer searchId = sc.nextInt();
+                sc.nextLine();
+
+                Order foundOrder = orderService.orderSearch(searchId);
+                if (foundOrder == null) {
+                    System.out.println("Pedido não encontrado!");
+                } else {
+                    System.out.println("\nExibindo pedido...\n");
+                    System.out.println(foundOrder.toString());
+                    System.out.println("\n Total do pedido: R$ " + String.format("%.2f", foundOrder.total()));
+                }
                 break;
             case 4:
-
+                System.out.println("=====LISTA DE PEDIDOS=====");
+                if (orderService.getOrders().isEmpty()) {
+                    System.out.println("Nenhum pedido cadastrado!");
+                } else {
+                    System.out.println("\nExibindo os pedidos...\n");
+                    for (Order o : orderService.getOrders()) {
+                        System.out.println(o.toString());
+                        System.out.println("| Total do pedido: R$ " + String.format("%.2f", o.total()) + "\n");
+                    }
+                }
                 break;
             case 5:
                 start();
