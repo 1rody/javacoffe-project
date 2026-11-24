@@ -12,4 +12,7 @@ public class ClientService {
     public boolean removeClient(String nameOrCpf){
         return clients.removeIf(e -> e.getCpf().equals(nameOrCpf));
     }
+    public ArrayList<Client> getClients(){
+        return clients;
+    }
 }

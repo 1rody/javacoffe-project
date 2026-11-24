@@ -12,4 +12,7 @@ public class EmployeeService {
     public boolean removeEmployee(String cpf) {
         return employees.removeIf(e -> e.getCpf().equals(cpf));
     }
+    public ArrayList<Employee> getEmployees(){
+        return employees;
+    }
 }
