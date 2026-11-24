@@ -5,9 +5,11 @@ import cafeteria.entities.Coffee;
 import java.util.ArrayList;
 import java.util.Comparator;
 
+/** Serviço de cafés: cardápio em memória com cadastro, remoção, busca, alteração e listagem. */
 public class CoffeService {
     private ArrayList<Coffee> coffees = new ArrayList<>();
 
+    /** Inicia o cardápio com 5 cafés padrão. */
     public CoffeService() {
         coffees.add(new Coffee("Expresso", 8.0,
                 "| Expresso:\nBase: Café extraído sob alta pressão (9 bars) em água quente.\n\nProporção: 100% café concentrado (sem adição de leite).\n\nVolume médio: 30 ml a 40 ml.\n\nPerfil sensorial: Encorpado, intenso, com acidez equilibrada, amargor pronunciado e uma camada densa de espuma dourada na superfície (crema).\n\nServiço: Xícara pequena (demitasse) pré-aquecida.",
@@ -30,20 +32,24 @@ public class CoffeService {
                 true));
     }
 
+    /** Adiciona um café. */
     public void addCoffee(Coffee coffee) {
         coffees.add(coffee);
     }
 
+    /** Remove o café pelo nome (diferencia maiúsculas); retorna true se removeu. */
     public boolean removeCoffee(String name) {
         return coffees.removeIf(e -> e.getCoffeename().equals(name));
     }
 
+    /** Retorna uma cópia ordenada por nome. */
     public ArrayList<Coffee> getCoffeesSorted() {
         ArrayList<Coffee> sorted = new ArrayList<>(coffees); //copia da lista original
         sorted.sort(Comparator.comparing(c -> c.getCoffeename())); //ordena por nome do cafe
         return sorted;
     }
 
+    /** Busca pelo nome (ignora maiúsculas); retorna null se não achar. */
     public Coffee searchCoffee(String name) {
         for (Coffee coffee : coffees) {
             if (coffee.getCoffeename().equalsIgnoreCase(name)) {
@@ -53,6 +59,7 @@ public class CoffeService {
         return null;
     }
 
+    /** Altera preço, descrição e lactose do café (o nome não muda); retorna false se não achar. */
     public boolean updateCoffee(String name, Double price, String description, Boolean lactose) {
         Coffee coffee = searchCoffee(name);
         if (coffee == null) {
@@ -64,6 +71,7 @@ public class CoffeService {
         return true;
     }
 
+    /** Retorna o cardápio na ordem de cadastro. */
     public ArrayList<Coffee> getCoffees() {
         return coffees;
     }

@@ -12,6 +12,10 @@ import cafeteria.services.OrderService;
 import java.util.Scanner;
 import java.util.List;
 
+/**
+ * Interface de console da cafeteria: mostra os menus, lê o teclado e delega aos services (recebidos pelo
+ * construtor). Áreas: gestão da equipe e cafés (com senha), clientes e atendimento (pedidos).
+ */
 public class Menu {
     //scanner do menu privado
     private Scanner sc = new Scanner(System.in);
@@ -21,7 +25,7 @@ public class Menu {
     private final OrderService orderService;
     private final CoffeService coffeService;
 
-    //injecao de dependencia: os services sao criados fora e recebidos aqui
+    /** Recebe os services já criados (injeção de dependência). */
     public Menu(EmployeeService employeeService, ClientService clientService,
                     OrderService orderService, CoffeService coffeService) {
         this.employeeService = employeeService;
@@ -31,7 +35,7 @@ public class Menu {
     }
 
 
-    //diferente de main aqui a cafeteria ja foi criada
+    /** Exibe o menu principal até digitar 0 e abre o submenu escolhido. */
     public void start() {
         int option;
 
@@ -56,12 +60,14 @@ public class Menu {
 
         } while (option != 0);
     }
+    /** Gestão da equipe (senha local 12345): uma ação por vez sobre funcionários e cafés. */
     private void employeeMenu() {
         int password;
         System.out.println("=====THE BEST COFFE STAFF=====");
         System.out.println("Insira a senha local para login");
         password = sc.nextInt();
 
+        //repete até a senha estar correta
         while(password != 12345) {
             System.out.println("Senha invalida favor tente novamente!");
             password = sc.nextInt();
@@ -75,11 +81,11 @@ public class Menu {
         System.out.println("3- Lista de funcionários");
         System.out.println("4- Lista de funcionários ordenada por nome");
         System.out.println("5- Cadastro dos cafés");
-        System.out.println("6- Alterar funcionário"); //novo
-        System.out.println("7- Remover café"); //novo
-        System.out.println("8- Alterar café"); //novo
-        System.out.println("9- Lista de cafés"); //novo
-        System.out.println("10- Lista de cafés ordenada por nome"); //novo
+        System.out.println("6- Alterar funcionário");
+        System.out.println("7- Remover café");
+        System.out.println("8- Alterar café");
+        System.out.println("9- Lista de cafés");
+        System.out.println("10- Lista de cafés ordenada por nome");
 
         int secondSelection;
         int thirdSelection;
@@ -93,6 +99,7 @@ public class Menu {
                 System.out.println("2- Cadastro de funcionários Terceirizados");
                 thirdSelection = sc.nextInt();
 
+                //1 = CLT, 2 = terceirizado
                 switch (thirdSelection) {
                     case 1:
                         System.out.println(" Cadastro de funcionário CLT");
@@ -176,6 +183,7 @@ public class Menu {
                             tipoInfo = "Terc. (" + external.getCompanyName() + ")";
                         }
 
+                        //pagamento polimórfico: CLT ou terceirizado
                         System.out.printf("%-5d | %-15s | %-25s | %-15s | %-15s | %-20s | R$ %8.2f%n",
                                 emp.getId(),
                                 emp.getName(),
@@ -355,9 +363,9 @@ public class Menu {
         }
 
     }
+    /** Menu de clientes: cadastrar, remover, alterar e listar (uma ação por vez). */
     private  void clientMenu() {
         int secondSelection;
-        //precisa n so criei a senha de ex pra validar o menu de funcionario
 
         System.out.println("Digite a opcao para realizar a acao");
 
@@ -459,6 +467,7 @@ public class Menu {
         }
     }
 
+    /** Menu de atendimento: criar, remover, consultar, listar e alterar pedidos (uma ação por vez). */
     private  void orderMenu() {
         int secondSelection;
         System.out.println("=====MENU DE ATENDIMENTO=====");
@@ -485,6 +494,7 @@ public class Menu {
                 int orderId = sc.nextInt();
                 sc.nextLine();
 
+                //cliente existente ou novo
                 Client orderClient = null;
                 List<Client> registeredClients = clientService.getClients();
 
@@ -522,6 +532,7 @@ public class Menu {
                     clientService.addClient(orderClient);
                 }
 
+                //composição: pedido com cliente e café
                 Order newOrder = new Order(orderId, orderClient);
 
                 System.out.println("Indo para a seção de produtos...");
@@ -531,6 +542,7 @@ public class Menu {
                     System.out.println("| " + item.getCoffeename() + " - R$ " + String.format("%.2f", item.getPrice()));
                 }
 
+                //repete até um café válido
                 Coffee selected = null;
                 while (selected == null) {
                     System.out.println("\n> Digite o nome do café selecionado:\n");
@@ -554,6 +566,7 @@ public class Menu {
 
                 //copia do item do cardápio, para a lactose do cliente não alterar o cadastro do café
                 Coffee coffe = new Coffee(selected.getCoffeename(), selected.getPrice(), selected.getDescription(), lactose);
+                //avisa: cliente intolerante e café com lactose
                 if (lactose && selected.getLactose()) {
                     System.out.println("|Atenção: este café contém lactose!");
                 }
@@ -576,6 +589,7 @@ public class Menu {
                 }
                 break;
             case 3:
+                //confere o ID e exibe a tabela de todos os pedidos
                 System.out.println("=====VER PEDIDO E TOTAL=====");
                 System.out.print("ID do pedido: ");
                 Integer searchId = sc.nextInt();
