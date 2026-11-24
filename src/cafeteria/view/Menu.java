@@ -16,10 +16,20 @@ public class Menu {
     //scanner do menu privado
     private Scanner sc = new Scanner(System.in);
 
-    private EmployeeService employeeService = new EmployeeService();
-    private ClientService clientService = new ClientService();
-    private OrderService orderService = new OrderService();
-    private CoffeService coffeService = new CoffeService();
+    private EmployeeService employeeService;
+    private ClientService clientService;
+    private OrderService orderService;
+    private CoffeService coffeService;
+
+    //construtor de menu
+    public Menu(EmployeeService employeeService, ClientService clientService, OrderService orderService, CoffeService coffeService) {
+    this.employeeService = employeeService;
+    this.clientService = clientService;
+    this.orderService = orderService;
+    this.coffeService = coffeService;
+    }
+
+
 
     //diferente de main aqui a cafeteria ja foi criada
     public void start() {
@@ -150,26 +160,28 @@ public class Menu {
                     System.out.println("Nenhum funcionário cadastrado!");
                 } else {
                     System.out.println("\nExibindo os funcionários...\n");
-                    for (Employee emp : employeeService.getEmployees()) {
-                        System.out.println("| Nome: " + emp.getName());
-                        System.out.println("| E-Mail: " + emp.getEmail());
-                        System.out.println("| CPF: " + emp.getCpf());
-                        System.out.println("| ID: " + emp.getId());
-                        System.out.println("| Cargo: " + emp.getOccupation());
+                    System.out.printf("%-5s | %-15s | %-25s | %-15s | %-15s | %-20s | %-12s%n",
+                            "ID", "NOME", "E-MAIL", "CPF", "CARGO", "TIPO/EMPRESA", "PAGAMENTO");
+                    System.out.println("------------------------------------------------------------------------------------------------------------------------");
 
+                    for (Employee emp : employeeService.getEmployees()) {
+                        String tipoInfo = "CLT";
                         if (emp instanceof ExternalEmployee) {
                             ExternalEmployee external = (ExternalEmployee) emp;
-                            System.out.println("| Tipo: Terceirizado");
-                            System.out.println("| Empresa: " + external.getCompanyName());
-                            System.out.println("| Valor da hora: R$ " + String.format("%.2f", external.getHourValue()));
-                            System.out.println("| Horas trabalhadas: " + external.getHourWorked());
-                        } else {
-                            System.out.println("| Tipo: CLT");
+                            tipoInfo = "Terc. (" + external.getCompanyName() + ")";
                         }
 
-                        System.out.println("| Pagamento: R$ " + String.format("%.2f", emp.calculatePayment()) + "\n");
+                        System.out.printf("%-5d | %-15s | %-25s | %-15s | %-15s | %-20s | R$ %8.2f%n",
+                                emp.getId(),
+                                emp.getName(),
+                                emp.getEmail(),
+                                emp.getCpf(),
+                                emp.getOccupation(),
+                                tipoInfo,
+                                emp.calculatePayment());
                     }
                 }
+
                 break;
             case 4:
                 System.out.println(" Cadastro de items ao menu");
@@ -257,12 +269,17 @@ public class Menu {
                     System.out.println("Nenhum cliente cadastrado!");
                 } else {
                     System.out.println("\nExibindo os clientes...\n");
+                    System.out.printf("%-20s | %-28s | %-15s%n", "NOME", "E-MAIL", "CPF");
+                    System.out.println("---------------------------------------------------------------------");
+
                     for (Client c : clientService.getClients()) {
-                        System.out.println("Nome: " + c.getName());
-                        System.out.println("E-Mail: " + c.getEmail());
-                        System.out.println("CPF: " + c.getCpf() + "\n");
+                        System.out.printf("%-20s | %-28s | %-15s%n",
+                                c.getName(),
+                                c.getEmail(),
+                                c.getCpf());
                     }
                 }
+
                 break;
             default:
                 System.out.println("Opcao invalida!");
@@ -396,22 +413,38 @@ public class Menu {
                 if (foundOrder == null) {
                     System.out.println("Pedido não encontrado!");
                 } else {
-                    System.out.println("\nExibindo pedido...\n");
-                    System.out.println(foundOrder.toString());
-                    System.out.println("\n Total do pedido: R$ " + String.format("%.2f", foundOrder.total()));
+                    System.out.println("\nExibindo os pedidos...\n");
+                    System.out.printf("%-5s | %-20s | %-10s | %-12s%n", "ID", "CLIENTE", "QTD ITENS", "TOTAL");
+                    System.out.println("--------------------------------------------------------");
+
+                    for (Order o : orderService.getOrders()) {
+                        System.out.printf("%-5d | %-20s | %-10d | R$ %8.2f%n",
+                                o.getId(),
+                                o.getClient().getName(),
+                                o.getCoffees().size(),
+                                o.total());
+                    }
                 }
+
                 break;
             case 4:
                 System.out.println("=====LISTA DE PEDIDOS=====");
                 if (orderService.getOrders().isEmpty()) {
-                    System.out.println("Nenhum pedido cadastrado!");
+                    System.out.printf("Nenhum pedido cadastrado!");
                 } else {
                     System.out.println("\nExibindo os pedidos...\n");
+                    System.out.printf("%-5s | %-20s | %-10s | %-12s%n", "ID", "CLIENTE", "QTD ITENS", "TOTAL");
+                    System.out.println("--------------------------------------------------------");
+
                     for (Order o : orderService.getOrders()) {
-                        System.out.println(o.toString());
-                        System.out.println("| Total do pedido: R$ " + String.format("%.2f", o.total()) + "\n");
+                        System.out.printf("%-5d | %-20s | %-10d | R$ %8.2f%n",
+                                o.getId(),
+                                o.getClient().getName(),
+                                o.getCoffees().size(),
+                                o.total());
                     }
                 }
+
                 break;
             case 5:
                 start();

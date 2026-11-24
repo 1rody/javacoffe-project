@@ -27,6 +27,14 @@ public class CoffeService {
         coffees.add(new Coffee("Latte", 13.0,
                 "| Latte:\nBase: Café expresso diluído em grande volume de leite vaporizado.\n\nProporção: ~20% café expresso, ~70% leite vaporizado e ~10% camada fina de microespuma.\n\nVolume médio: 240 ml a 300 ml.\n\nPerfil sensorial: Suave, lácteo e cremoso, com o sabor do café em segundo plano e dulçor natural do leite em evidência. Ideal para latte art.\n\nServiço: Xícara grande ou copo alto de vidro.",
                 true));
+        
+        coffees.add(new Coffee("Americano", 7.5,
+                "| Americano:\nBase: Dose de café expresso suavizada com água quente.\n\nProporção: 1 parte de café expresso para 2 ou 3 partes de água quente.\n\nVolume médio: 120 ml a 180 ml.\n\nPerfil sensorial: corpo leve a médio, amargor suavizado, acide mais evidente e notas aromáticas limpas e persistentes.\n\nServiço: Xícara média de porcelana ou cerâmica",
+                false));
+
+        coffees.add(new Coffee("Doppio", 9.0,
+                "| Doppio:\nBase: Extração dupla de café puro sob alta pressão, oferecendo o dobro de volume e intensidade com uma camada espessa de crema dourada.\n\nProporção: 100% café puro extraído. Geralmente, 18g a 20g de pó para 40g a 60g de bebida liquída.\n\nVolume médio: 50 ml a 60 ml.\n\nPerfil sensorial: corpo denso e aveludado, sabor intenso e concentrado, doçura natural equilibrada com amargor marcante e finalização longa.\n\nServiço: Xícara pequena (demitasse) de porcelana ou vidro com parede espessa para reter o calor",
+                false));
     }
 
     public void addCoffee(Coffee coffee) {
